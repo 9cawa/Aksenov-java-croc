@@ -2,9 +2,7 @@ package ru.croc.task5;
 
 import ru.croc.task4.Rectangle;
 
-class MovableRectangle extends Rectangle implements Movable,Figure{
-    private int x1, y1;
-    private int x2, y2;
+class MovableRectangle extends Rectangle implements Movable{
 
     public MovableRectangle(int x1, int y1, int x2, int y2) {
         super(x1, y1, x2, y2);

@@ -1,8 +1,8 @@
 package ru.croc.task4;
 
 public class Rectangle extends Figure {
-    private int x1, y1;
-    private int x2, y2;
+    public int x1, y1;
+    public int x2, y2;
 
     public Rectangle(int x1, int y1, int x2, int y2) {
         this.x1 = x1;
@@ -13,7 +13,7 @@ public class Rectangle extends Figure {
 
     @Override
     public String toString() {
-        return "R " + "(" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + ")";
+        return "R " + "(" + this.x1 + ", " + this.y1 + "), (" + this.x2 + ", " + this.y2 + ")";
     }
 
     //Getters and Setters

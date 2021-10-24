@@ -1,6 +1,7 @@
 package ru.croc.task5;
 
-//import ru.croc.task4.Figure;
+import ru.croc.task4.Figure;
+import ru.croc.task4.Annotation;
 
 import java.util.Scanner;
 
@@ -86,7 +87,7 @@ public class Main {
                             String signature = sc.next();
                             Figure f2 = null;
                             try {
-                                f2 = (Figure) annotatedImage.findByLabel(signature).getFigure();
+                                f2 = annotatedImage.findByLabel(signature).getFigure();
                                 System.out.println("Ваша область: " + f2.toString());
                                 System.out.println("Введите на сколько вы хотите сместить координаты х и у");
                                 ((Movable) f2).move(sc.nextInt(), sc.nextInt());
