@@ -1,8 +1,8 @@
 package ru.croc.task4;
 
-class Circle extends Figure {
-    private int x1, y1;
-    private int r;
+public class Circle extends Figure {
+    public int x1, y1;
+    public int r;
 
     public Circle(int x1, int y1, int r) {
         if (r < 0) {

@@ -1,5 +1,5 @@
 package ru.croc.task4;
 
-abstract class Figure {
+public abstract class Figure {
 
 }

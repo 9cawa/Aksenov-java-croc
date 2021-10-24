@@ -1,6 +1,7 @@
 package ru.croc.task5;
 
-class Annotation {
+
+public class Annotation {
     public String info;
     public Figure figure;
 
@@ -29,3 +30,4 @@ class Annotation {
         this.figure = figure;
     }
 }
+

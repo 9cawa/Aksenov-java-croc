@@ -1,5 +1,7 @@
 package ru.croc.task5;
 
+//import ru.croc.task4.Figure;
+
 import java.util.Scanner;
 
 public class Main {
@@ -33,14 +35,14 @@ public class Main {
             switch (input) {
                 case 1:
                     System.out.println("Введите кооридинаты левого нижнего и правого верхнего углов.");
-                    Figure rectangle = new Rectangle(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+                    Figure rectangle = new MovableRectangle(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
                     System.out.println("Введите подпись: ");
                     Annotation annotation = new Annotation(rectangle, sc.next());
                     annotations[i] = annotation;
                     break;
                 case 2:
                     System.out.println("Введите координаты центра и радиус.");
-                    Figure circle = new Circle(sc.nextInt(), sc.nextInt(), sc.nextInt());
+                    Figure circle = new MovableCircle(sc.nextInt(), sc.nextInt(), sc.nextInt());
                     System.out.println("Введите подпись: ");
                     Annotation annotationTwo = new Annotation(circle, sc.next());
                     annotations[i] = annotationTwo;
@@ -70,7 +72,7 @@ public class Main {
                             int y = sc.nextInt();
                             Figure f = null;
                             try {
-                                f = annotatedImage.findByPoint(x, y).getFigure();
+                                f = (Figure) annotatedImage.findByPoint(x, y).getFigure();
                                 System.out.println("Ваша область: " + f.toString());
                                 System.out.println("Введите на сколько вы хотите сместить координаты х и у");
                                 ((Movable) f).move(sc.nextInt(), sc.nextInt());
@@ -84,7 +86,7 @@ public class Main {
                             String signature = sc.next();
                             Figure f2 = null;
                             try {
-                                f2 = annotatedImage.findByLabel(signature).getFigure();
+                                f2 = (Figure) annotatedImage.findByLabel(signature).getFigure();
                                 System.out.println("Ваша область: " + f2.toString());
                                 System.out.println("Введите на сколько вы хотите сместить координаты х и у");
                                 ((Movable) f2).move(sc.nextInt(), sc.nextInt());

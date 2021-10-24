@@ -1,6 +1,6 @@
 package ru.croc.task4;
 
-class Rectangle extends Figure {
+public class Rectangle extends Figure {
     private int x1, y1;
     private int x2, y2;
 
