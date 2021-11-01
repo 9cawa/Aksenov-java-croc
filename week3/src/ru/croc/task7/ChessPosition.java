@@ -1,5 +1,7 @@
 package ru.croc.task7;
 
+import ru.croc.task7.exceptions.IllegalPositionException;
+
 public class ChessPosition {
     private int x;
     private int y;

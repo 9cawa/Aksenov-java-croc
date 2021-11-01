@@ -1,5 +1,7 @@
 package ru.croc.task7;
 
+import ru.croc.task7.exceptions.IllegalMoveException;
+
 public class Knight {
     private ChessPosition[] sequenceOfPositions; //Последовательность ходов
 
