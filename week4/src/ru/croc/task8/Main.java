@@ -15,11 +15,23 @@ public class Main {
         }
 
         int count = 0;
-        while (scanner.hasNextLine()) {
-            count += scanner.nextLine().split("\\s+").length;
+        boolean condition;
+        String word;
+        while (scanner.hasNext()) {
+            condition = false;
+            word = scanner.next();
+            for (int i = 0; i < word.length(); i++) {
+                char ch = word.charAt(i);
+                if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ||
+                        (ch >= 'а' && ch <= 'я') || (ch >= 'А' && ch <= 'Я') ) {
+                    condition = true;
+                    break;
+                }
+            }
+            if (condition) {
+                count++;
+            }
         }
         System.out.println("Количество слов в файле: " + count);
     }
 }
-
-
