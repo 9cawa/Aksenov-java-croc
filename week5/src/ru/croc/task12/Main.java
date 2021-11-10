@@ -32,14 +32,14 @@ public class Main {
 
     public static synchronized StringBuilder generatePass(StringBuilder myPass) {
         Random random = new Random();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 7; i++) {
             myPass.append((char) ('a' + random.nextInt(26)));
         }
         return myPass;
     }
 
     static class Run implements Runnable{
-        StringBuilder myPass = new StringBuilder(4);
+        StringBuilder myPass = new StringBuilder(7);
 
         @Override
         public void run() {
@@ -52,7 +52,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        long t1 = System.currentTimeMillis();
+        //long t1 = System.currentTimeMillis();
         int numberOfThreads = Integer.parseInt(args[0]);
         String hashPass = args[1];
         boolean passFounded = false;
@@ -80,6 +80,6 @@ public class Main {
         }
         //System.out.println(hashPass.equals(hashPassword("passwrd")));
         System.out.println("My password is \"" + password + "\"");
-        System.out.println("Затраченное время: " + (System.currentTimeMillis()-t1)/1_000 + " сек");
+        //System.out.println("Затраченное время: " + (System.currentTimeMillis()-t1)/1_000 + " сек");
     }
 }
