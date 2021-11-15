@@ -110,7 +110,12 @@ public class Main {
                 hm.put(candidate,1);
             }
         }
-        return Integer.parseInt(temp);
+        //Обработка случаев, когда в списке фильмов кандидатов находится одинаковое количество уникальных фильмов
+        try {
+            return Integer.parseInt(temp);
+        } catch (NumberFormatException e) {
+            return hm.get("1");
+        }
 
     }
 
@@ -142,9 +147,9 @@ public class Main {
 
             ArrayList<String> candidateFilms = candidatesForRecommendation(userForRecommendation, choseUsers);
 
-            System.out.println("Candidate films for [" + userForRecommendation + "] : " + candidateFilms);
+            //System.out.println("Candidate films for [" + userForRecommendation + "] : " + candidateFilms);
 
-            System.out.println(films.get(recommendFilm(candidateFilms)));
+            System.out.println("We recommend you to watch this film: " + films.get(recommendFilm(candidateFilms)));
         }
     }
 
