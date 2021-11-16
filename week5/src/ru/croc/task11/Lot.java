@@ -27,6 +27,9 @@ public class Lot{
     }
 
     public String getWinner() {
-        return this.userName + " is winner of auction!";
+        if (new Date().after(endOfBids))
+            return this.userName + " is winner of auction!";
+        else
+            return "The binding has not ended!";
     }
 }
