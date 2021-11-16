@@ -6,7 +6,6 @@ public class Lot{
     private volatile int currentCost;
     private volatile String userName;
     private Date endOfBids;
-    private static final Object syncObj = new Object();
 
     public Lot(int currentCost, String userName, Date endOfBids) {
         this.currentCost = currentCost;
@@ -16,7 +15,7 @@ public class Lot{
 
     public void makeBid(int currentCost, String userName) {
         if (currentCost > this.currentCost && new Date().before(this.endOfBids)) {
-            synchronized (syncObj) {
+            synchronized (this) {
                 if (currentCost > this.currentCost && new Date().before(this.endOfBids)) {
                     this.currentCost = currentCost;
                     this.userName = userName;
@@ -27,7 +26,7 @@ public class Lot{
         }
     }
 
-    public synchronized String getWinner() {
+    public String getWinner() {
         return this.userName + " is winner of auction!";
     }
 }
