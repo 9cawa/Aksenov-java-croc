@@ -6,6 +6,7 @@ public class Lot{
     private volatile int currentCost;
     private volatile String userName;
     private Date endOfBids;
+    private static final Object syncObj = new Object();
 
     public Lot(int currentCost, String userName, Date endOfBids) {
         this.currentCost = currentCost;
@@ -13,10 +14,14 @@ public class Lot{
         this.endOfBids = endOfBids;
     }
 
-    public synchronized void makeBid(int currentCost, String userName) {
+    public void makeBid(int currentCost, String userName) {
         if (currentCost > this.currentCost && new Date().before(this.endOfBids)) {
-            this.currentCost = currentCost;
-            this.userName = userName;
+            synchronized (syncObj) {
+                if (currentCost > this.currentCost && new Date().before(this.endOfBids)) {
+                    this.currentCost = currentCost;
+                    this.userName = userName;
+                }
+            }
         } else {
             System.out.println("Your bid is less than existing one or the auction is end.");
         }
