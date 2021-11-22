@@ -14,7 +14,9 @@ public class Test extends Filter{
         blackList.add("НЕНАВИЖУ");
         blackList.add("ДЕПОЗИТ");
 
-        Filter.filterComments(comments,blackList);
+        Filter filter = new Filter();
+
+        filter.filterComments(comments,blackList);
         System.out.println("После фильтрации: " + comments);
     }
 }
