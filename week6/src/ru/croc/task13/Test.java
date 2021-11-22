@@ -2,7 +2,7 @@ package ru.croc.task13;
 
 import java.util.*;
 
-public class Test implements BlackListFilter{
+public class Test extends Filter{
     public static void main(String[] args) {
         ArrayList<String> comments = new ArrayList<>();
         comments.add("Я ненавижу КРОК.");
@@ -14,7 +14,7 @@ public class Test implements BlackListFilter{
         blackList.add("НЕНАВИЖУ");
         blackList.add("ДЕПОЗИТ");
 
-        BlackListFilter.filterComments(comments,blackList);
+        Filter.filterComments(comments,blackList);
         System.out.println("После фильтрации: " + comments);
     }
 }
