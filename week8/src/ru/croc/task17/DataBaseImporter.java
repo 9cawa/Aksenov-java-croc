@@ -7,14 +7,12 @@ import java.util.*;
 
 public class DataBaseImporter {
 
-    //Строка с запросом к БД для создания таблицы Products
-    private static final String CreateProducts = "CREATE TABLE Products" +
+    //Строка с запросом к БД для создания таблиц Products и Orders
+    private static final String CreateTables = "CREATE TABLE Products" +
             "(ArticleID VARCHAR(255) PRIMARY KEY," +
             "Product VARCHAR(255) NOT NULL, " +
-            "Cost INT NOT NULL)";
-
-    //Строка с запросом к БД для создания таблицы Orders
-    private static final String CreateOrders = "CREATE TABLE Orders" +
+            "Cost INT NOT NULL);" +
+            "CREATE TABLE Orders" +
             "(ID INT NOT NULL, " +
             "UserName VARCHAR(255) NOT NULL, " +
             "Article VARCHAR(255), " +
@@ -22,15 +20,14 @@ public class DataBaseImporter {
 
 
     public static void main(String[] args) {
-        List<String> orders = new ArrayList<>(); //Список, куда записываются заказы (ID, UserName, Article)
-        List<String> products = new ArrayList<>(); //Список, куда записываются товары (ArticleID, Product, Cost)
+        List<Order> orders = new ArrayList<>(); //Список, куда записываются заказы (ID, UserName, Article)
+        List<Product> products = new ArrayList<>(); //Список, куда записываются товары (ArticleID, Product, Cost)
         readFile(args[0],orders,products); //Считываем из файла заказы
 
         String connectionUrl = "jdbc:h2:tcp://localhost/~/test/test";
 
         try (Connection connection = DriverManager.getConnection(connectionUrl, "sa", "12")) {
-            createTableInDB(connection, CreateProducts);
-            createTableInDB(connection, CreateOrders);
+            createTableInDB(connection);
 
             importProductsToDB(connection, products);
             importOrdersToDB(connection,orders);
@@ -41,7 +38,7 @@ public class DataBaseImporter {
     }
 
     /** Метод, считывающий из файла информацию о заказах и записывающий ее в два списка **/
-    static void readFile(String path,List<String> orders, List<String> product) {
+    static void readFile(String path,List<Order> orders, List<Product> product) {
         Scanner scanner;
         try {
             scanner = new Scanner(Paths.get(path));
@@ -50,48 +47,49 @@ public class DataBaseImporter {
             return;
         }
 
-        String tmp; //В эту переменную в каждой итерации записываем текущую строку
+        Set<String> Articles = new HashSet<>(); //В эту коллекцию будут добавляться артикулы
+                                                // товаров для соблюдения уникальности
+        String[] tmp; //В эту переменную в каждой итерации записываем текущую строку
         while (scanner.hasNextLine()) {
-            tmp = scanner.nextLine();
+            tmp = scanner.nextLine().split(",");
 
-            //В список orders добавляем (ID, UserName, Article)
-            orders.add(tmp.split(",")[0] + "," + tmp.split(",")[1] + "," + tmp.split(",")[2]);
+            //В список orders добавляем объект класса
+            orders.add(new Order(Integer.parseInt(tmp[0]),tmp[1],tmp[2]));
 
-            //Если в списке product нет того же артикула,
-            // что и в текущей строке, то добавляем (ArticleID, Product, Cost)
-            if (!product.toString().contains(tmp.split(",")[2]))
-                product.add(tmp.split(",")[2] + "," +tmp.split(",")[3] + "," + tmp.split(",")[4]);
+            //Если в коллекции Articles нет такого артикула то добавляем в список новый продукт
+            if (Articles.add(tmp[2]))
+                product.add(new Product(tmp[2], tmp[3], Integer.parseInt(tmp[4])));
         }
     }
 
     /** Метод, создающий таблицу в базе данных **/
-    static void createTableInDB(Connection connection, String sql) throws SQLException{
+    static void createTableInDB(Connection connection) throws SQLException{
         try (Statement statement = connection.createStatement()){
-            statement.execute(sql);
+            statement.execute(DataBaseImporter.CreateTables);
         }
     }
 
     /** Метод, который заполняет таблицу Products **/
-    static void importProductsToDB(Connection connection, List<String> products) throws SQLException{
+    static void importProductsToDB(Connection connection, List<Product> products) throws SQLException{
         String sql = "INSERT INTO Products VALUES(?,?,?)";
-        for (String product : products) {
+        for (Product product : products) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, product.split(",")[0]);
-                statement.setString(2, product.split(",")[1]);
-                statement.setInt(3, Integer.parseInt(product.split(",")[2]));
+                statement.setString(1, product.getProductCode());
+                statement.setString(2, product.getProductName());
+                statement.setInt(3, product.getCost());
                 statement.execute();
             }
         }
     }
 
     /** Метод, который заполняет таблицу Orders **/
-    static void importOrdersToDB(Connection connection, List<String> orders) throws SQLException {
+    static void importOrdersToDB(Connection connection, List<Order> orders) throws SQLException {
         String sql = "INSERT INTO Orders VALUES(?,?,?)";
-        for (String order : orders) {
+        for (Order order : orders) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, Integer.parseInt(order.split(",")[0]));
-                statement.setString(2, order.split(",")[1]);
-                statement.setString(3, order.split(",")[2]);
+                statement.setInt(1, order.getID());
+                statement.setString(2, order.getUserLogin());
+                statement.setString(3, order.getArticle());
                 statement.execute();
             }
         }
