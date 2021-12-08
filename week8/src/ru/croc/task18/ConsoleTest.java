@@ -25,7 +25,7 @@ public class ConsoleTest {
 
     /** Статический метод выполняющий консольный тест работы всех методов DAO-класса **/
     static void executingCommands(Connection connection) throws SQLException {
-        Dao dao = new Dao();
+        Dao dao = new Dao(connection);
         Scanner sc = new Scanner(System.in);
 
         WHILE:
@@ -41,7 +41,7 @@ public class ConsoleTest {
                         break;
                     }
                     try {
-                        dao.createProduct(new Product(command[1], command[2], Integer.parseInt(command[3])), connection);
+                        dao.createProduct(new Product(command[1], command[2], Integer.parseInt(command[3])));
                         System.out.println("Команда успешно выполнена!");
                     } catch (NumberFormatException e) {
                         System.out.println("Неправильный формат ввода параметров товара!");
@@ -57,7 +57,7 @@ public class ConsoleTest {
                         break;
                     }
                     try {
-                        dao.updateProduct(new Product(command[1], command[2], Integer.parseInt(command[3])),connection);
+                        dao.updateProduct(new Product(command[1], command[2], Integer.parseInt(command[3])));
                         System.out.println("Команда успешно выполнена!");
                     } catch (NumberFormatException e) {
                         System.out.println("Неправильный формат ввода параметров товара!");
@@ -73,7 +73,7 @@ public class ConsoleTest {
                         break;
                     }
                     try {
-                        dao.deleteProduct(command[1], connection);
+                        dao.deleteProduct(command[1]);
                         System.out.println("Команда успешно выполнена!");
                     } catch (ThereIsNoSuchProductInDB e) {
                         System.out.println(e.getMessage());
@@ -91,7 +91,7 @@ public class ConsoleTest {
                         productsForOrder.add(new Product(command[i]));
                     }
                     try {
-                        dao.createOrder(command[1], productsForOrder, connection);
+                        dao.createOrder(command[1], productsForOrder);
                         System.out.println("Команда успешно выполнена!");
                     } catch (ThereIsNoSuchProductInDB e) {
                         System.out.println(e.getMessage());

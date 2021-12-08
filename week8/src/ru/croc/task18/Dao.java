@@ -10,8 +10,14 @@ import java.util.List;
 /** DAO-класс для работы с БД **/
 public class Dao {
 
+    Connection connection;
+
+    public Dao(Connection connection) {
+        this.connection = connection;
+    }
+
     /** Поиск в БД товара с указанным артикулом **/
-    Product findProduct(String productCode, Connection connection) throws SQLException {
+    Product findProduct(String productCode) throws SQLException {
         Product returnProduct = new Product();
         try (PreparedStatement statement = connection
                 .prepareStatement("SELECT * FROM Products p WHERE p.ArticleID = ?")){
@@ -30,8 +36,8 @@ public class Dao {
     }
 
     /** Создание нового товара **/
-    Product createProduct(Product product, Connection connection) throws SQLException {
-        if (findProduct(product.getProductCode(), connection) != null)
+    Product createProduct(Product product) throws SQLException {
+        if (findProduct(product.getProductCode()) != null)
             throw new ThisProductAlreadyInDBException();
         else {
             try (PreparedStatement statement = connection.prepareStatement("INSERT INTO Products VALUES(?,?,?)")) {
@@ -45,8 +51,8 @@ public class Dao {
     }
 
     /** Изменение информации о товаре **/
-    Product updateProduct(Product product, Connection connection) throws SQLException {
-        if (findProduct(product.getProductCode(), connection) == null)
+    Product updateProduct(Product product) throws SQLException {
+        if (findProduct(product.getProductCode()) == null)
             throw new ThereIsNoSuchProductInDB();
         else {
             try (PreparedStatement statement = connection.prepareStatement
@@ -63,8 +69,8 @@ public class Dao {
     }
 
     /** Удаление товара и всех упоминаний о нем в заказах **/
-    void deleteProduct(String productCode, Connection connection) throws SQLException {
-        if (findProduct(productCode, connection) == null)
+    void deleteProduct(String productCode) throws SQLException {
+        if (findProduct(productCode) == null)
             throw new ThereIsNoSuchProductInDB();
         else {
             try (PreparedStatement statement = connection.prepareStatement
@@ -80,7 +86,7 @@ public class Dao {
     }
 
     /** Метод нахождения ID последнего заказа **/
-    int getLastOrderID(Connection connection) throws SQLException {
+    int getLastOrderID() throws SQLException {
         try (Statement statement = connection.createStatement()){
             try (ResultSet result = statement.executeQuery("SELECT ID FROM Orders o ORDER BY o.ID DESC")) {
                 result.next();
@@ -91,14 +97,14 @@ public class Dao {
 
     /** Создание заказа.
      * Для указанного пользователя в БД создается новый заказ с заданным списком товаров **/
-    Order createOrder(String userLogin, List<Product> products, Connection connection) throws SQLException {
-        int ID = getLastOrderID(connection) + 1; //Ищем ID последнего заказа и прибавляем 1 = ID текущего заказа
+    Order createOrder(String userLogin, List<Product> products) throws SQLException {
+        int ID = getLastOrderID() + 1; //Ищем ID последнего заказа и прибавляем 1 = ID текущего заказа
         ArrayList<String> productsArticles = new ArrayList<>(); //В эту коллекцию будем записывать артикулы продуктов
                                                                 // для возвращаемого значения Order
         try (PreparedStatement statement = connection.prepareStatement
                 ("INSERT INTO Orders VALUES(?,?,?)")) {
             for (Product product : products) {
-                if (findProduct(product.getProductCode(), connection) == null)
+                if (findProduct(product.getProductCode()) == null)
                     throw new ThereIsNoSuchProductInDB();
                 productsArticles.add(product.getProductCode());
                 statement.setInt(1, ID);

@@ -7,16 +7,16 @@ import java.util.*;
 
 public class DataBaseImporter {
 
-    //Строка с запросом к БД для создания таблиц Products и Orders
-    private static final String CreateTables = "CREATE TABLE Products" +
+    //Строки с запросом к БД для создания таблиц Products и Orders
+    private static final String createProducts = "CREATE TABLE Products" +
             "(ArticleID VARCHAR(255) PRIMARY KEY," +
             "Product VARCHAR(255) NOT NULL, " +
-            "Cost INT NOT NULL);" +
-            "CREATE TABLE Orders" +
+            "Cost INT NOT NULL);";
+    private static final String createOrders = "CREATE TABLE Orders" +
             "(ID INT NOT NULL, " +
             "UserName VARCHAR(255) NOT NULL, " +
             "Article VARCHAR(255), " +
-            "foreign key (Article) references Products(ArticleID))";
+            "foreign key (Article) references Products(ArticleID));";
 
 
     public static void main(String[] args) {
@@ -65,7 +65,8 @@ public class DataBaseImporter {
     /** Метод, создающий таблицу в базе данных **/
     static void createTableInDB(Connection connection) throws SQLException{
         try (Statement statement = connection.createStatement()){
-            statement.execute(DataBaseImporter.CreateTables);
+            statement.execute(DataBaseImporter.createProducts);
+            statement.execute(DataBaseImporter.createOrders);
         }
     }
 
